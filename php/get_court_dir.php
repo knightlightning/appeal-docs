@@ -1,9 +1,7 @@
 <?php
-function get_court_dir($court, $doc_type, $include_month = false, $auto_create = false) {
-    $tar_dir = "/srv/appeal-tar/";
-    $suv_dir = "/srv/appeal-suv/";
+function get_court_dir($court, $doc_type, $mode, $include_month = false, $auto_create = false) {
     $year = date("Y");
-    $dir = (($doc_type == "civil") ? $tar_dir : $suv_dir) . $court . "/{$year}/";
+    $dir = "/srv/" . $mode . (($doc_type == "civil") ? "-tar/" : "-suv/") . $court . "/{$year}/";
     if ($include_month) {
         $dir = "{$dir}" . date("m") . "/";
     }

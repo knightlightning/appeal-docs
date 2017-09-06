@@ -8,12 +8,16 @@ $court = $_POST["court"];
 if (!isset($court)) {
     return;
 }
+$mode = $_POST["mode"];
+if (!isset($mode)) {
+    return;
+}
 $doc_type = $_POST["docType"];
 if (!isset($doc_type)) {
     return;
 }
 
-$target_dir = get_court_dir($court, $doc_type, true, true);
+$target_dir = get_court_dir($court, $doc_type, $mode, true, true);
 
 function virus_check(string $f, string &$out) {
     `chmod o+r {$f}`;
@@ -87,6 +91,6 @@ for ($i=0; $i < $total; $i++) {
     }
 }
 if ($files != null) {
-    update_stat($court, $doc_type, $files);
+    update_stat($court, $doc_type, $mode, $files);
 }
 ?>

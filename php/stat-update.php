@@ -20,15 +20,15 @@ function get_court_id($mysqli, $court) {
     return $court_id;
 }
 
-function get_upload_id($mysqli, $court_id, $doc_type) {
+function get_upload_id($mysqli, $court_id, $mode, $doc_type) {
     $sql = "SELECT id FROM uploads WHERE upload_date = '" . date("Ymd") . "' AND 
-        court_type = '{$doc_type}' AND court_id = '{$court_id}'";
+        court_type = '{$doc_type}' AND court_id = '{$court_id}' AND mode = '{$mode}'";
     $result = query_db($mysqli, $sql);
     if ($result->num_rows === 0) {
-        $sql = "INSERT INTO uploads(upload_date,court_id,court_type) VALUES('" . date("Ymd") . "',{$court_id},'{$doc_type}')";
+        $sql = "INSERT INTO uploads(upload_date,court_id,court_type,mode) VALUES('" . date("Ymd") . "',{$court_id},'{$doc_type}','{$mode}')";
         $result->close();
         query_db($mysqli, $sql);
-        return get_upload_id($mysqli, $court_id, $doc_type);
+        return get_upload_id($mysqli, $court_id, $mode, $doc_type);
     }
     else {
         $upload_id = $result->fetch_object()->id;
@@ -44,12 +44,12 @@ function update_file_info($mysqli, $upload_id, $files) {
     }
 }
 
-function update_stat($court, $doc_type, $files) {
+function update_stat($court, $doc_type, $mode, $files) {
     $mysqli = new mysqli("localhost", "appeal", "Selkit2", "appealstat");
     $mysqli->set_charset("utf8");
     try {
         $court_id = get_court_id($mysqli, $court); 
-        $upload_id = get_upload_id($mysqli, $court_id, $doc_type);
+        $upload_id = get_upload_id($mysqli, $court_id, $mode, $doc_type);
         update_file_info($mysqli, $upload_id, $files);
     } catch (Exception $e) {
         error_log($e->getMessage());

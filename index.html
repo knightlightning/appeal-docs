@@ -1,214 +1,64 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Форма загрузки судебных решений для районных судов Омской области</title>
-<script src="../javascript/jquery/jquery.js"></script>
-<script src="js/jquery.cookie.js"></script>
-<script>
-    $(document).ready(function() {
-        var index = $.cookie("court");
-        if (index != null) {
-            $("#court")[0].selectedIndex = index;
-        }
-    });
-    function printCourtHistory() {
-        var fd = new FormData();
-        fd.append("court", $("#court").val());
-        fd.append("docType", $("input[name=docType]:checked", "#uploadForm").val());
-        $.ajax({
-            url: 'php/get_court_history.php',
-            data: fd,
-            processData: false,
-            contentType: false,
-            type: 'POST',
-            success: function (data) {
-                $("#output").val(data);
-            }
-        })
-    }
-    function enableUpload() {
-        var court = $("#court").val();
-        var fileCount = $("#docs")[0].files.length;
-        $("#upload").prop("disabled", fileCount == 0 || court == 0);
-    }
-    $(function() {
-        $("#court").change(function() {
-            $.cookie("court", $("#court")[0].selectedIndex, { expires: 90, path: "/" });
-            printCourtHistory();
-            enableUpload();
-        })
-    })
-    $(function() {
-        $("#docs").change(function() {
-            var uploadBtn = $("#upload")[0];
-            const MAX_FILE_SIZE = 50*1024*1024;
-            const MAX_POST_SIZE = 50*1024*1024;
-            const MAX_FILES     = 20;
-            var totalSize = 0;
-            for (i=0; i < docs.files.length; i++) {
-                var f = this.files[i];
-                if (f.size > MAX_FILE_SIZE) {
-                    alert("Файл \"" + f.name + "\" превышает установленный лимит (50 МБ).");
-                    uploadBtn.disabled = true;
-                    this.value = "";
-                    return;
-                }
-                totalSize += f.size;
-            }
-            if (totalSize > MAX_POST_SIZE) {
-                alert("Превышен установленный лимит загрузки (50 МБ).");
-                uploadBtn.disabled = true;
-                this.value = "";
-                return;
-            }
-            if (this.files.length > MAX_FILES) {
-                alert("Максимально допустимое количество файлов для загрузки - 20 штук.");
-                uploadBtn.disabled = true;
-                this.value = "";
-                return;
-            }
-            enableUpload();
-            })
-    })
-    $(function() {
-        $("input[type=radio][name=docType]").change(function() {
-            printCourtHistory();
-        })
-    })
-    $(function() {
-        $("#uploadForm").submit(function(event) {
-            var form = $("#formFields")[0];
-            form.disabled = "disabled";
-            event.preventDefault();
-            var fd = new FormData();
-            fd.append("court", $("#court").val());
-            fd.append("docType", $("input[name=docType]:checked", "#uploadForm").val());
-            $.each($("#docs")[0].files, function(i, f) {
-                fd.append("docs[]", f);
-            });
-            $.ajax({
-                url: 'php/upload.php',
-                data: fd,
-                processData: false,
-                contentType: false,
-                type: 'POST',
-                success: function (data) {
-                    if (!data) {
-                        alert("Файл(ы) был(и) успешно загружен(ы).");
-                    }
-                    else {
-                        alert("Некоторые файлы не были загружены:\n" + data);
-                    }
-                    $("#docs")[0].value = "";
-                    enableUpload();
-                    printCourtHistory();
-                    form.disabled = "";
-                },
-                error: function(data) {
-                    alert("Во время загрузки файлов произошла ошибка.");
-                    printCourtHistory();
-                    enableUpload();
-                }
-            })
-        })
-    })
-</script>
-<style>
-    html, body {
-        display: flex;
-        justify-content: center;
-        height: 100%;
-        margin: 0;
-        background: #f3f5f6; 
-    }
-    textarea {
-        display: flex;
-        flex: 1 1 auto;
-        resize: none;
-        white-space: pre;
-        overflow: auto;
-    }
-    #outer {
-        width: 740px;
-        min-height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-    #inner {
-        display: flex;
-        flex: 1 1 auto;
-        flex-direction: column;
-        border-color: lightgray;
-        border-style: solid;
-        padding: 1rem;
-        margin: 1rem;
-        background: white;
-    }
-    p {
-        margin: 0 0 0 0;
-    }
-    fieldset {
-        margin: 0 0 0.5rem 0;
-        border-style: solid;
-        border-width: thin;
-    }
-    #formFields {
-        margin: 0 0 0.5rem 0;
-        padding: 0 0 0 0;
-        border: none;
-    }
-    h2 {
-        margin: 0 0 1rem 0;
-        text-align: center;
-    }
-</style>
-</head>
-<body>
-    <div id="outer">
-        <div id="inner">
-            <h2>Отправка копий судебных решений для рассмотрения в апелляционной инстанции Омского областного суда</h2>
-            <form id="uploadForm" action="upload.php" enctype="multipart/form-data" method="post">
-                <fieldset id="formFields">
-                    <fieldset>
-                        <legend>Выберите файл(ы)</legend> 
-                        <input id="docs" type="file" name="docs[]" accept=".docx,.doc,.rtf,.pdf,.zip,.rar" multiple>
-                        <ul style="margin: 0.5rem 0 0 0; padding: 0 0 0 1rem;">
-                            <li><i>Доступные типы файлов: docx, doc, rtf, pdf, zip, rar.</i></li>
-                            <li><i>Максимальный размер одного файла - 50 МБ.</i></li>
-                            <li><i>Совокупный размер всех выбранных файлов - 50 МБ.</i></li>
-                            <li><i>Максимальное количество файлов - 20 штук.</i></li>
-                        </ul>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="js/script.js"></script>
+        
+        <title>Форма загрузки судебных решений для районных судов Омской области</title>
+    </head>
+    <body>
+        <div id="outer">
+            <div id="inner">
+                <h2>Отправка копий судебных решений для рассмотрения в апелляционной инстанции Омского областного суда</h2>
+                <form id="uploadForm" action="upload.php" enctype="multipart/form-data" method="post">
+                    <fieldset id="formFields">
+                        <fieldset>
+                            <legend>Выберите файл(ы)</legend> 
+                            <input id="docs" type="file" name="docs[]" accept=".docx,.doc,.rtf,.pdf,.zip,.rar" multiple>
+                            <ul style="margin: 0.5rem 0 0 0; padding: 0 0 0 1rem;">
+                                <li><i>Доступные типы файлов: docx, doc, rtf, pdf, zip, rar.</i></li>
+                                <li><i>Максимальный размер одного файла - 50 МБ.</i></li>
+                                <li><i>Совокупный размер всех выбранных файлов - 50 МБ.</i></li>
+                                <li><i>Максимальное количество файлов - 20 штук.</i></li>
+                            </ul>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Выберите свой суд</legend>
+                            <select id="court">
+                                <option value=""></option>
+                                <?php include "php/populate-courts.php"; ?>
+                            </select>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Выберите тип документа</legend>
+                            <select id="mode">
+                                <option value=""></option>
+                                <option value="appeal">Решение</option>
+                                <option value="notifications">Извещение</option>
+                            </select>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Выберите делопроизводство</legend>
+                            <label>
+                                <input type="radio" name="docType" value="civil" checked>Гражданское и административное<br>
+                            </label>
+                            <label>
+                                <input type="radio" name="docType" value="criminal">Уголовное
+                            </label>
+                        </fieldset>
+                        <input id="upload" type="submit" disabled value="Загрузить">
                     </fieldset>
-                    <fieldset>
-                        <legend>Выберите свой суд</legend>
-                        <select id="court" name="court">
-                            <option value=""></option>
-                            <?php
-                                include "php/populate-courts.php";
-                            ?>
-                        </select>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Выберите делопроизводство</legend>
-                        <label>
-                            <input type="radio" name="docType" value="civil" checked>Гражданское и административное<br>
-                        </label>
-                        <label>
-                            <input type="radio" name="docType" value="criminal">Уголовное
-                        </label>
-                    </fieldset>
-                    <input id="upload" type="submit" disabled="true" value="Загрузить">
-                </fieldset>
-            </form>
-            <p>Список загруженных файлов за текущий год в формате: &lt;месяц&gt;/&lt;файл&gt;</p>
-            <textarea id="output" readonly></textarea>
-            <p style="margin: 0.5rem 0 0 0;" align="right"><i>По вопросам функционирования системы обращаться на
-                <a href="mailto:postmaster@oblsud.omsk.ru">postmaster@oblsud.omsk.ru</a>
-            </i></p>
-            <p align="right"><i>или по телефону: 948-251</i></p>
-
+                </form>
+                <p>Список загруженных файлов за текущий год в формате: &lt;месяц&gt;/&lt;файл&gt;</p>
+                <textarea id="output" readonly></textarea>
+                <p style="margin: 0.5rem 0 0 0;" align="right"><i>По вопросам функционирования системы обращаться на
+                        <a href="mailto:postmaster@oblsud.omsk.ru">postmaster@oblsud.omsk.ru</a>
+                    </i></p>
+                <p align="right"><i>или по телефону: 948-251</i></p>
+            </div>
         </div>
-    </div>
-</body>
+    </body>
 </html>
 
