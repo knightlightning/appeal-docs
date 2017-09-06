@@ -10,7 +10,7 @@ $(document).ready(function () {
 function printCourtHistory() {
     var fd = new FormData();
     fd.append("court", $("#court").val());
-    fd.append("mode", $("#mode").val());
+    fd.append("mode", $("input[name=mode]:checked", "#uploadForm").val());
     fd.append("docType", $("input[name=docType]:checked", "#uploadForm").val());
     $.ajax({
         url: 'php/get_court_history.php',
@@ -25,9 +25,8 @@ function printCourtHistory() {
 }
 function enableUpload() {
     var court = $("#court").prop("selectedIndex");
-    var mode = $("#mode").prop("selectedIndex");
     var fileCount = $("#docs")[0].files.length;
-    $("#upload").prop("disabled", fileCount === 0 || court === 0 || mode === 0);
+    $("#upload").prop("disabled", fileCount === 0 || court === 0);
 }
 $(function () {
     $("#court").change(function () {
@@ -37,9 +36,8 @@ $(function () {
     });
 });
 $(function () {
-    $("#mode").change(function () {
+    $("[name=docType],[name=mode]").change(function () {
         printCourtHistory();
-        enableUpload();
     });
 });
 $(function () {
@@ -72,11 +70,6 @@ $(function () {
             return;
         }
         enableUpload();
-    });
-});
-$(function () {
-    $("input[type=radio][name=docType]").change(function () {
-        printCourtHistory();
     });
 });
 $(function () {

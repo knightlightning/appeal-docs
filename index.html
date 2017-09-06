@@ -6,12 +6,12 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="js/script.js"></script>
         
-        <title>Форма загрузки судебных решений для районных судов Омской области</title>
+        <title>Отправка судебных документов</title>
     </head>
     <body>
         <div id="outer">
             <div id="inner">
-                <h2>Отправка копий судебных решений для рассмотрения в апелляционной инстанции Омского областного суда</h2>
+                <h2>Отправка судебных документов для рассмотрения в апелляционной инстанции Омского областного суда</h2>
                 <form id="uploadForm" action="upload.php" enctype="multipart/form-data" method="post">
                     <fieldset id="formFields">
                         <fieldset>
@@ -33,11 +33,12 @@
                         </fieldset>
                         <fieldset>
                             <legend>Выберите тип документа</legend>
-                            <select id="mode">
-                                <option value=""></option>
-                                <option value="appeal">Решение</option>
-                                <option value="notifications">Извещение</option>
-                            </select>
+                            <label>
+                                <input type="radio" name="mode" value="appeal" checked>Решение<br>
+                            </label>
+                            <label>
+                                <input type="radio" name="mode" value="notifications">Извещение
+                            </label>
                         </fieldset>
                         <fieldset>
                             <legend>Выберите делопроизводство</legend>
