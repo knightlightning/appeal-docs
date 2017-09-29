@@ -79,7 +79,7 @@ $(function () {
         event.preventDefault();
         var fd = new FormData();
         fd.append("court", $("#court").val());
-        fd.append("mode", $$("input[name=mode]:checked", "#uploadForm").val());
+        fd.append("mode", $("input[name=mode]:checked", "#uploadForm").val());
         fd.append("docType", $("input[name=docType]:checked", "#uploadForm").val());
         $.each($("#docs")[0].files, function (i, f) {
             fd.append("docs[]", f);
