@@ -38,12 +38,12 @@ function copy_file(string $s, string $d, string &$out) {
         $file_type = pathinfo($d, PATHINFO_EXTENSION);
         if (strcasecmp($file_type, "rar") == 0) {
             $path = pathinfo($d, PATHINFO_DIRNAME) . "/" . pathinfo($d, PATHINFO_FILENAME);
-            `mkdir {$path}`;
+            `mkdir '{$path}'`;
             `/usr/bin/unrar x -r '{$d}' '{$path}'`;
         }
         else if (strcasecmp($file_type, "zip") == 0) {
             $path = pathinfo($d, PATHINFO_DIRNAME) . "/" . pathinfo($d, PATHINFO_FILENAME);
-            `mkdir {$path}`;
+            `mkdir '{$path}'`;
             `/usr/bin/unzip '{$d}' -d '{$path}'`;
         }
     }
@@ -77,6 +77,6 @@ for ($i=0; $i < $total; $i++) {
     }
 }
 if ($files != null) {
-    update_stat($court, $doc_type, $mode, $files);
+    #update_stat($court, $doc_type, $mode, $files);
 }
 ?>
