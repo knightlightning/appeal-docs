@@ -77,6 +77,6 @@ for ($i=0; $i < $total; $i++) {
     }
 }
 if ($files != null) {
-    #update_stat($court, $doc_type, $mode, $files);
+    update_stat($court, $doc_type, $mode, $files);
 }
 ?>
