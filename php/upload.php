@@ -37,12 +37,12 @@ function copy_file(string $s, string $d, string &$out) {
         `chmod 0644 '{$d}'`;
         $file_type = pathinfo($d, PATHINFO_EXTENSION);
         if (strcasecmp($file_type, "rar") == 0) {
-            $path = pathinfo($d, PATHINFO_DIRNAME) . "/" . pathinfo($d, PATHINFO_FILENAME);
+            $path = substr($d, 0, -4);
             `mkdir '{$path}'`;
             `/usr/bin/unrar x -r '{$d}' '{$path}'`;
         }
         else if (strcasecmp($file_type, "zip") == 0) {
-            $path = pathinfo($d, PATHINFO_DIRNAME) . "/" . pathinfo($d, PATHINFO_FILENAME);
+            $path = substr($d, 0, -4);
             `mkdir '{$path}'`;
             `/usr/bin/unzip '{$d}' -d '{$path}'`;
         }
