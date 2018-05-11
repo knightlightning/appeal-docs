@@ -1,5 +1,7 @@
 <?php
 
+include "conn.php";
+
 class DbException extends Exception { }
 
 function query_db($mysqli, $sql) {
@@ -45,7 +47,7 @@ function update_file_info($mysqli, $upload_id, $files) {
 }
 
 function update_stat($court, $doc_type, $mode, $files) {
-    $mysqli = new mysqli("localhost", "appeal", "Selkit2", "appealstat");
+    $mysqli = new mysqli($db_host, "appeal", "Selkit2", "appealstat");
     $mysqli->set_charset("utf8");
     try {
         $court_id = get_court_id($mysqli, $court); 
